@@ -1,0 +1,3 @@
+<project name="executeFile" default="run" basedir=".">
+
+<!-- List of properties for referencing to directories -->

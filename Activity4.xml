@@ -1,0 +1,2 @@
+<!--Buildfile which includes compilation, documentation, junit, and coverage report using jacoco-->
+<project name="executeFile" default="run" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
