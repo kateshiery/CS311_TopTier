@@ -1,6 +1,6 @@
 <project name="executeFile" default="run" basedir=".">
 
-   <!-- List of properties for referencing to directories -->
+   <!-- List of properties for referencing to directories in the file -->
    <property name="source_dir" value="src"/>
    <property name="classes_dir" value="build/classes"/>
    <property name="doc_dir" value="build/doc"/>
