@@ -1,2 +1,157 @@
 <!--Buildfile which includes compilation, documentation, junit, and coverage report using jacoco-->
 <project name="executeFile" default="run" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+    <!--Create properties for directories for ease of direction-->
+    <property name="source_dir" value="src"/>
+    <property name="lib_dir" value="lib"/>
+    <property name="main_dir" value="src/main"/>
+    <property name="test_dir" value="src/test"/>
+    <property name="jar_dir" value="jar"/>
+    <property name="doc_dir" value="doc"/>
+    <property name="classes_dir" value="classes"/>
+    <property name="junit_dir" value="junit-reports"/>
+    <property name="coverage_dir" value="coverage-reports"/>
+
+    <!--Declare path for junit-->
+    <path id = "junit_path">
+        <pathelement location="${classes_dir}"/>
+        <pathelement location="${lib_dir}" />
+        <pathelement location="${lib_dir}/junit-4.12.jar"/>
+        <pathelement path="${lib_dir}/hamcrest-core-1.3.jar"/>
+    </path>
+
+    <!--Comment out mo nlng jerry yung tags for jacoco-->
+
+    <!--Declare path for jacoco-->
+    <!-- <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml"> -->
+    <!-- <classpath path="${lib_dir}/jacocoant.jar"/> -->
+    <!-- </taskdef> -->
+    
+
+    <!--Compile files-->
+    <target name = "compile" depends="clean_up">
+        <input message = "Enter the name of the java file: " addproperty = "filename"/>
+        <mkdir dir = "${classes_dir}"/>
+        <javac srcdir = "${main_dir}" destdir = "${classes_dir}" includeantruntime = "false">
+            <include name = "${filename}.java" />
+        </javac>
+        <javac srcdir = "${test_dir}" destdir = "${classes_dir}" includeantruntime = "false">
+            <classpath refid = "junit_path" />
+            <include name="*.java" />
+        </javac>
+    </target>
+
+    <!--Generate javadocs-->
+    <target name="documentation" depends="compile">
+        <echo>Generating documentation...</echo>
+        <mkdir dir="${doc_dir}" />
+        <javadoc  sourcefiles="${source_dir}/main/${filename}.java"
+                  destdir="${doc_dir}"
+                  author="true"
+                  version="true"
+                  windowtitle="Documentation"
+                  doctitle="Documentation">
+            <fileset dir="${source_dir}/main" />
+            <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
+        </javadoc>
+    <javadoc  classpathref="junit_path" sourcefiles=""
+                  destdir="${doc_dir}"
+                  author="true"
+                  version="true"
+                  windowtitle="Documentation"
+                  doctitle="Documentation">
+            <fileset dir="${source_dir}/test" />
+            <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
+        </javadoc>
+    </target>
+
+
+    <!--Create jar files-->
+    <target name = "jar" depends = "documentation">
+        <jar destfile = "${jar_dir}/class.jar" basedir = "${classes_dir}">
+            <manifest>
+                <attribute name = "Main-Class" value = "${filename}"/>
+            </manifest>
+        </jar>
+        <jar destfile="${jar_dir}/${filename}Doc.jar" basedir="${classes_dir}" />
+    </target>
+
+    <!--Generate junit report-->
+    <target name = "junit_test" depends = "jar">
+        <mkdir dir = "${junit_dir}"/>
+        <mkdir dir ="${coverage_dir}" />
+        <jacoco:coverage destfile="${coverage_dir}/jacoco.exec">
+            <junit printsummary = "yes" haltonfailure = "no" fork = "true">
+                <classpath refid = "junit_path"/>
+                <formatter type="xml" />
+                <batchtest  fork="true" todir="${coverage_dir}">
+                    <fileset dir="${test_dir}">
+                        <include name="*.java" />
+                    </fileset>
+                </batchtest>
+            </junit>
+        </jacoco:coverage>
+        <junitreport todir="${coverage_dir}">
+            <fileset dir="${coverage_dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit_dir}"/>
+        </junitreport>
+    </target>
+
+    
+    <!-- Generate coverage report -->
+<!--
+    <target name = "coverage_report" depends = "junit_test">
+        <jacoco:report>
+            <executiondata>
+                <file file = "${coverage_dir}/jacoco.exec" />
+            </executiondata>
+            <structure name = "Coverage Report">
+                <classfiles>
+                    <fileset dir = "${classes_dir}" />
+                </classfiles>
+                <sourcefiles encoding = "UTF-8">
+                    <fileset dir = "${main_dir}" />
+                    <fileset dir = "${test_dir}" />
+                </sourcefiles>
+            </structure>
+            <!-- Produce the report in different formats -->
+            <html destdir = "${coverage_dir}/html" />
+            <csv destfile = "${coverage_dir}/report.csv" />
+            <xml destfile = "${coverage_dir}/report.xml" />
+        </jacoco:report>
+    </target>
+-->
+    
+    
+    
+
+    <!-- Runs the generated Jar file. Will also generate the documentation of the source file.-->
+    <target name = "run" depends = "coverage_report">
+        <java jar = "${jar_dir}/class.jar" fork = "true"/>
+    </target>
+
+
+    <!-- Cleans the build directory -->
+    <target name = "clean">
+        <delete includeEmptyDirs = "true">
+            <fileset dir = ".">
+                <exclude name = "build.xml" />
+                <exclude name = "${source_dir}/" />
+                <exclude name = "${lib_dir}/" />
+                <include name = "**/*" />
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- Deletes the directories for class, doc, and jar files-->
+    <target name="clean_up">
+        <deltree dir="${jar_dir}" />
+        <deltree dir="${doc_dir}" />
+        <deltree dir="${classes_dir}"/>
+        <deltree dir="${junit_dir}"/>
+        <deltree dir="${coverage_dir}"/>
+    </target>
+
+
+</project>
