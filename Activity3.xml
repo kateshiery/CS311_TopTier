@@ -6,6 +6,13 @@
    <property name="doc_dir" value="build/doc"/>
    <property name="jar_dir" value="build/jar"/>
 
+   <!-- Deletes the directories for class, doc, and jar files-->
+   <target name="clean">
+      <deltree dir="${classes_dir}" />
+      <deltree dir="${doc_dir}"/>
+      <deltree dir="${jar_dir}"/>
+   </target>
+
    <!--Gets the package/folder name and the Java file name input from the user and compiles the Java file to a Class file-->
    <target name="compile" depends="clean">
       <mkdir dir="${classes_dir}" />
@@ -17,6 +24,7 @@
       </javac>
    </target>
 
+   <!-- Generated Java documentation for files in the specified directory -->
    <target name="documentation" depends="compile">
         <echo>Generating documentation...</echo>
         <mkdir dir="${doc_dir}" />
