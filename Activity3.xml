@@ -16,3 +16,17 @@
       <include name="${foldername}/${filename}.java"/>
       </javac>
    </target>
+
+   <target name="documentation" depends="compile">
+        <echo>Generating documentation...</echo>
+        <mkdir dir="${doc_dir}" />
+        <javadoc  sourcefiles="${source_dir}/${foldername}/${filename}.java"
+                  destdir="${doc_dir}"
+                 author="true" 
+                 version="true" 
+                 windowtitle="Documentation"
+                 doctitle="Documentation">
+                 <fileset dir="${source_dir}/${foldername}" />
+                 <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
+        </javadoc>
+    </target>
