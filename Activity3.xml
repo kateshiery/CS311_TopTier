@@ -38,3 +38,15 @@
                  <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
         </javadoc>
     </target>
+
+    <!-- Generates jar files for specified file name-->
+    <target name="jar" depends="compile, documentation">
+        <mkdir dir="${jar_dir}"/>
+        <jar destfile="${jar_dir}/${filename}Class.jar" basedir="${classes_dir}" >
+            <manifest>
+                <attribute name="Main-Class" value="${foldername}/${filename}"/>
+            </manifest>
+        </jar>
+        <jar destfile="${jar_dir}/${filename}Doc.jar" basedir="${doc_dir}" />
+    </target>
+</project>
