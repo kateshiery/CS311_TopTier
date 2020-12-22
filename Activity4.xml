@@ -27,14 +27,11 @@
 
     <!--Compile files-->
     <target name = "compile" depends="clean_up">
+        <input message = "Enter the package name: " addproperty="packagename" />
         <input message = "Enter the name of the java file: " addproperty = "filename"/>
         <mkdir dir = "${classes_dir}"/>
-        <javac srcdir = "${main_dir}" destdir = "${classes_dir}" includeantruntime = "false">
+        <javac srcdir = "${main_dir}/${packagename}" destdir = "${classes_dir}" includeantruntime = "false">
             <include name = "${filename}.java" />
-        </javac>
-        <javac srcdir = "${test_dir}" destdir = "${classes_dir}" includeantruntime = "false">
-            <classpath refid = "junit_path" />
-            <include name="*.java" />
         </javac>
     </target>
 
@@ -42,23 +39,14 @@
     <target name="documentation" depends="compile">
         <echo>Generating documentation...</echo>
         <mkdir dir="${doc_dir}" />
-        <javadoc  sourcefiles="${source_dir}/main/${filename}.java"
+        <javadoc  sourcefiles="${source_dir}/${packagename}/${filename}.java"
                   destdir="${doc_dir}"
                   author="true"
                   version="true"
                   windowtitle="Documentation"
                   doctitle="Documentation">
             <fileset dir="${source_dir}/main" />
-            <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
-        </javadoc>
-    <javadoc  classpathref="junit_path" sourcefiles=""
-                  destdir="${doc_dir}"
-                  author="true"
-                  version="true"
-                  windowtitle="Documentation"
-                  doctitle="Documentation">
-            <fileset dir="${source_dir}/test" />
-            <bottom> <![CDATA[<i>Copyrights 2020. KiloByte/i>]]> </bottom>
+            <bottom> <![CDATA[<i>Copyrights 2020. Top-Tier/i>]]> </bottom>
         </javadoc>
     </target>
 
