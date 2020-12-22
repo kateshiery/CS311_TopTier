@@ -27,14 +27,11 @@
 
     <!--Compile files-->
     <target name = "compile" depends="clean_up">
+        <input message = "Enter the package name: " addproperty="packagename" />
         <input message = "Enter the name of the java file: " addproperty = "filename"/>
         <mkdir dir = "${classes_dir}"/>
-        <javac srcdir = "${main_dir}" destdir = "${classes_dir}" includeantruntime = "false">
+        <javac srcdir = "${main_dir}/${packagename}" destdir = "${classes_dir}" includeantruntime = "false">
             <include name = "${filename}.java" />
-        </javac>
-        <javac srcdir = "${test_dir}" destdir = "${classes_dir}" includeantruntime = "false">
-            <classpath refid = "junit_path" />
-            <include name="*.java" />
         </javac>
     </target>
 
